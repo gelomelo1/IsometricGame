@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e119239c33905164d9554dfdc286bafc, type: 3}
+  m_Name: 06 (OD) Vest 02
+  m_EditorClassIdentifier: 
+  m_bodyGroup: 5
+  m_icon: {fileID: 21300000, guid: f5d304f218e050c45ba01c68cefff7ed, type: 3}
+  m_bodyPartName: (OD) PlateCarrier 02
+  m_addons:
+  - {fileID: 11400000, guid: 5b4f492d3fdf7c646b9885620e546f98, type: 2}
+  - {fileID: 11400000, guid: 8c3dadafbe9d4a04682cda466a4eae81, type: 2}
+  - {fileID: 11400000, guid: fd4f29662b56a95489a0413b53087565, type: 2}
+  - {fileID: 11400000, guid: c4e2724eaf887574cab2b00d9ef4166d, type: 2}
+  - {fileID: 11400000, guid: e51f82b9743dcab4f87decf38ed8ce99, type: 2}

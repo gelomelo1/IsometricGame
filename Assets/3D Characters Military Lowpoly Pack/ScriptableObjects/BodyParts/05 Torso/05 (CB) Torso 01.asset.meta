@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: a91701c24450ac5459d41807dc65e0fc
+labels:
+- Character
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272050
+  packageName: 3D Modular Soldiers Lowpoly Pack
+  packageVersion: 1.1 - Minor Fix
+  assetPath: Assets/3D Characters Military Lowpoly Pack/ScriptableObjects/BodyParts/05
+    Torso/05 (CB) Torso 01.asset
+  uploadId: 664886

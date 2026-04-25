@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: a94cc7297ad113b4e8e1a2cdcd2ca755
+labels:
+- Character
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272050
+  packageName: 3D Modular Soldiers Lowpoly Pack
+  packageVersion: 1.1 - Minor Fix
+  assetPath: Assets/3D Characters Military Lowpoly Pack/ScriptableObjects/BodyParts/07
+    Hips/07 (WL) Hips 04.asset
+  uploadId: 664886

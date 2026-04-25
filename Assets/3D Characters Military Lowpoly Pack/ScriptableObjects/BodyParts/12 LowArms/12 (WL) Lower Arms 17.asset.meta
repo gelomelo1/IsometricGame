@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 279d07c1269c5f24885db757b3961407
+labels:
+- Character
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272050
+  packageName: 3D Modular Soldiers Lowpoly Pack
+  packageVersion: 1.1 - Minor Fix
+  assetPath: Assets/3D Characters Military Lowpoly Pack/ScriptableObjects/BodyParts/12
+    LowArms/12 (WL) Lower Arms 17.asset
+  uploadId: 664886

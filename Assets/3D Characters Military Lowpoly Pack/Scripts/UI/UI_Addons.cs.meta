@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 82670b044ea25eb4995e89700c6b2e59
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272050
+  packageName: 3D Modular Soldiers Lowpoly Pack
+  packageVersion: 1.1 - Minor Fix
+  assetPath: Assets/3D Characters Military Lowpoly Pack/Scripts/UI/UI_Addons.cs
+  uploadId: 664886

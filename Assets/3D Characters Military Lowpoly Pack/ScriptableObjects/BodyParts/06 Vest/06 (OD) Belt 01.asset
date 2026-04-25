@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e119239c33905164d9554dfdc286bafc, type: 3}
+  m_Name: 06 (OD) Belt 01
+  m_EditorClassIdentifier: 
+  m_bodyGroup: 5
+  m_icon: {fileID: 21300000, guid: d3dfdc59285861042ac6b4ef3b98d01b, type: 3}
+  m_bodyPartName: (OD) Belt 01M
+  m_addons:
+  - {fileID: 11400000, guid: b1e5b72a96bbd984cb7cbda10dbc5ce5, type: 2}
+  - {fileID: 11400000, guid: d0d690efc29df344785273ee0160a6cf, type: 2}
+  - {fileID: 11400000, guid: 9d891f682f7e2f9418da5ca3346c66ee, type: 2}

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 506f9d059e15d9f4a9b5c0af1f354aac
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272050
+  packageName: 3D Modular Soldiers Lowpoly Pack
+  packageVersion: 1.1 - Minor Fix
+  assetPath: Assets/3D Characters Military Lowpoly Pack/Scripts/UI/KeepSingleButtonSelected.cs
+  uploadId: 664886

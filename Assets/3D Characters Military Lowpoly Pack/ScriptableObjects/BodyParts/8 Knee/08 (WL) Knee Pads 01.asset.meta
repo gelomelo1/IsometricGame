@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 38862fbabe1b48a4f889a1ebaa3fe227
+labels:
+- Character
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272050
+  packageName: 3D Modular Soldiers Lowpoly Pack
+  packageVersion: 1.1 - Minor Fix
+  assetPath: Assets/3D Characters Military Lowpoly Pack/ScriptableObjects/BodyParts/8
+    Knee/08 (WL) Knee Pads 01.asset
+  uploadId: 664886

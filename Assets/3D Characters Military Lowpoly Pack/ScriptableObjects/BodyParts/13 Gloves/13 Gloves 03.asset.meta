@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 9e3d8cf544ff5ae4682100f80e635283
+labels:
+- Character
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272050
+  packageName: 3D Modular Soldiers Lowpoly Pack
+  packageVersion: 1.1 - Minor Fix
+  assetPath: Assets/3D Characters Military Lowpoly Pack/ScriptableObjects/BodyParts/13
+    Gloves/13 Gloves 03.asset
+  uploadId: 664886

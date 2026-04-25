@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 607b7ecd26d80ef46962233ecd17b299
+labels:
+- Character
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272050
+  packageName: 3D Modular Soldiers Lowpoly Pack
+  packageVersion: 1.1 - Minor Fix
+  assetPath: Assets/3D Characters Military Lowpoly Pack/ScriptableObjects/BodyParts/06
+    Vest/06 (CB) Vest 03.asset
+  uploadId: 664886

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 9fa5fd8358152e1449ab7209c43ef48f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272050
+  packageName: 3D Modular Soldiers Lowpoly Pack
+  packageVersion: 1.1 - Minor Fix
+  assetPath: Assets/3D Characters Military Lowpoly Pack/Scripts/UI/UI_Button_GroupColorChoser.cs
+  uploadId: 664886

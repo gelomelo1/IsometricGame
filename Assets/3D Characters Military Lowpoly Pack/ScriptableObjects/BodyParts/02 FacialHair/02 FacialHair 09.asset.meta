@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: e245f13eb2f7b6644806914f09ce1465
+labels:
+- Character
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272050
+  packageName: 3D Modular Soldiers Lowpoly Pack
+  packageVersion: 1.1 - Minor Fix
+  assetPath: Assets/3D Characters Military Lowpoly Pack/ScriptableObjects/BodyParts/02
+    FacialHair/02 FacialHair 09.asset
+  uploadId: 664886

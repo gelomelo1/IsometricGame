@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: f04c616fba3b89d4c9ef65ebba17ade4
+labels:
+- Character
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272050
+  packageName: 3D Modular Soldiers Lowpoly Pack
+  packageVersion: 1.1 - Minor Fix
+  assetPath: Assets/3D Characters Military Lowpoly Pack/ScriptableObjects/BodyParts/10
+    UperArms/10 (FS) Uper Arms 02.asset
+  uploadId: 664886

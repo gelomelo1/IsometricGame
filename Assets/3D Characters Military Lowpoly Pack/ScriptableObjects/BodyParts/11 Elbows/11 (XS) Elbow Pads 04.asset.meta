@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 793afd6762e7ca0438ea0e4a5c9fbbf1
+labels:
+- Character
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272050
+  packageName: 3D Modular Soldiers Lowpoly Pack
+  packageVersion: 1.1 - Minor Fix
+  assetPath: Assets/3D Characters Military Lowpoly Pack/ScriptableObjects/BodyParts/11
+    Elbows/11 (XS) Elbow Pads 04.asset
+  uploadId: 664886

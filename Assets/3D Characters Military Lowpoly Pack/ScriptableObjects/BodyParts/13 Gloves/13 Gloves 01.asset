@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e119239c33905164d9554dfdc286bafc, type: 3}
+  m_Name: 13 Gloves 01
+  m_EditorClassIdentifier: 
+  m_bodyGroup: 12
+  m_icon: {fileID: 21300000, guid: 99c9081e3fe5e214098d86e5c28c74fc, type: 3}
+  m_bodyPartName: Gloves 01_2

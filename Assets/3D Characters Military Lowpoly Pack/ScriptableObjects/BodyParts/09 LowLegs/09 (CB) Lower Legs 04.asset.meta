@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 3436d235e89d69d43912bbeb6bd39196
+labels:
+- Character
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272050
+  packageName: 3D Modular Soldiers Lowpoly Pack
+  packageVersion: 1.1 - Minor Fix
+  assetPath: Assets/3D Characters Military Lowpoly Pack/ScriptableObjects/BodyParts/09
+    LowLegs/09 (CB) Lower Legs 04.asset
+  uploadId: 664886

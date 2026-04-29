@@ -1,4 +1,5 @@
-﻿ using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Animations.Rigging;
 
@@ -50,11 +51,8 @@ namespace StarterAssets
         public float Gravity = -15.0f;
 
         [Space(10)]
-        [Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
-        public float JumpTimeout = 0.50f;
-
-        [Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
-        public float FallTimeout = 0.15f;
+        [Tooltip("Time required to pass before being able to do movement action again.")]
+        public float MovementActionTimeout = 0.5f;
 
         [Tooltip("Useful for rough ground")]
         public float GroundedOffset = -0.14f;
@@ -80,44 +78,37 @@ namespace StarterAssets
         private bool isMouseIdle = false;
 
         // timeout deltatime
-        private float _jumpTimeoutDelta;
-        private float _fallTimeoutDelta;
+        public float _movementActionTimeoutDelta = 0f;
         private float _mouseIdleDelta;
 
         // Speed
         public float targetSpeed = 0f;
         private const float _threshold = 0.01f;
-        private float _speed;
+        public float _speed;
 
         // Velocity
         float _verticalVelocity = 0;
 
         // roll values
-        private Vector3? _rollVector = null;
-        private float _remainingRollTime = 0f;
+        public Vector3? _rollVector = null;
+        public float _remainingRollTime = 0f;
 
         // Input Values
         Vector3 inputDirection = Vector3.zero;
         Vector2 mousePosition = Vector3.zero;
 
         // Calculated values
-        Vector3 moveDirection = Vector3.zero;
+        public Vector3 moveDirection = Vector3.zero;
         public Vector3 animationDirection = Vector3.zero;
-
-        private void Start()
-        {
-            // reset our timeouts on start
-            _jumpTimeoutDelta = JumpTimeout;
-            _fallTimeoutDelta = FallTimeout;
-        }
 
         private void Update()
         {
+            HandleMovementActionTimeout();
             HandleAimState();
             HandleInput();
             ResolveStates();
             GroundedCheck();
-            JumpAndGravity();
+            ApplyGravity();
             Move();
         }
 
@@ -130,17 +121,23 @@ namespace StarterAssets
             // Mouse position
             mousePosition = PlayerContext.Input.look;
 
-            // Switch to Roll state if its not already roll, jump, fall
+            // Switch to Roll state if timeout expired and its not already roll, jump, fall
             if(PlayerContext.Input.roll && PlayerContext.MovementState != MovementState.Roll && PlayerContext.MovementState != MovementState.Jump && PlayerContext.MovementState != MovementState.Fall)
             {
-                PlayerContext.PlayerStateMachine.SwitchMovementState(MovementState.Roll);
+                if(_movementActionTimeoutDelta < 0)
+                {
+                    PlayerContext.PlayerStateMachine.SwitchMovementState(MovementState.Roll);
+                }
                 PlayerContext.Input.roll = false;
             }
 
-            // Switch to Jump state if its not already jump, roll, fall
+            // Switch to Jump state if timeout expired and its not already jump, roll, fall
             if (PlayerContext.Input.jump && PlayerContext.MovementState != MovementState.Roll && PlayerContext.MovementState != MovementState.Jump && PlayerContext.MovementState != MovementState.Fall)
             {
-                PlayerContext.PlayerStateMachine.SwitchMovementState(MovementState.Jump);
+                if(_movementActionTimeoutDelta < 0)
+                {
+                    PlayerContext.PlayerStateMachine.SwitchMovementState(MovementState.Jump);
+                }
                 PlayerContext.Input.jump = false;
             }
 
@@ -178,15 +175,34 @@ namespace StarterAssets
             }
 
             // Switch state from aim to run if the mouse is idle
-            if(isMouseIdle && PlayerContext.MovementState != MovementState.Run && PlayerContext.MovementState == MovementState.Aim)
+            if(isMouseIdle &&  PlayerContext.MovementState == MovementState.Aim)
             {
                 PlayerContext.PlayerStateMachine.SwitchMovementState(MovementState.Run);
             }
 
             // Switch state from run to aim if the mouse is not idle
-            if (!isMouseIdle && PlayerContext.MovementState == MovementState.Run && PlayerContext.MovementState != MovementState.Aim)
+            if (!isMouseIdle && PlayerContext.MovementState == MovementState.Run)
             {
                 PlayerContext.PlayerStateMachine.SwitchMovementState(MovementState.Aim);
+            }
+
+            // Switch state from jump to fall if velocity becomes negative and player not grounded
+            if(!PlayerContext.Grounded && _verticalVelocity < 0 && PlayerContext.MovementState == MovementState.Jump)
+            {
+                PlayerContext.PlayerStateMachine.SwitchMovementState(MovementState.Fall);
+            }
+
+            // Switch state from other state to fall if player not grounded, and not in jumping state
+            if (!PlayerContext.Grounded && PlayerContext.MovementState != MovementState.Jump && PlayerContext.MovementState != MovementState.Fall)
+            {
+                PlayerContext.PlayerStateMachine.SwitchMovementState(MovementState.Fall);
+            }
+
+            // Switch state from fall to other state if player become grounded
+            if (PlayerContext.Grounded && PlayerContext.MovementState == MovementState.Fall)
+            {
+                MovementState newMovement = DetermineNextState();
+                PlayerContext.PlayerStateMachine.SwitchMovementState(newMovement);
             }
         }
 
@@ -206,59 +222,16 @@ namespace StarterAssets
                              new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
         }
 
-        private void JumpAndGravity()
+        private void ApplyGravity()
         {
-            if (PlayerContext.Grounded)
+            if (PlayerContext.Grounded && _verticalVelocity < 0.0f)
             {
-                // reset the fall timeout timer
-                _fallTimeoutDelta = FallTimeout;
-
-                //PlayerContext.Animator.SetBool(_animIDJump, false);
-                //PlayerContext.Animator.SetBool(_animIDFreeFall, false);
-
-                // stop our velocity dropping infinitely when grounded
                 if (_verticalVelocity < 0.0f)
                 {
                     _verticalVelocity = -2f;
                 }
-
-                // Jump
-                if (PlayerContext.Input.jump && _jumpTimeoutDelta <= 0.0f)
-                {
-                    // the square root of H * -2 * G = how much velocity needed to reach desired height
-                    _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
-
-
-                    //PlayerContext.Animator.SetBool(_animIDJump, true);
-                }
-
-                // jump timeout
-                if (_jumpTimeoutDelta >= 0.0f)
-                {
-                    _jumpTimeoutDelta -= Time.deltaTime;
-                }
-            }
-            else
-            {
-                // reset the jump timeout timer
-                _jumpTimeoutDelta = JumpTimeout;
-
-                // fall timeout
-                if (_fallTimeoutDelta >= 0.0f)
-                {
-                    _fallTimeoutDelta -= Time.deltaTime;
-                }
-                else
-                {
-
-                    //PlayerContext.Animator.SetBool(_animIDFreeFall, true);
-                }
-
-                // if we are not grounded, do not jump
-                PlayerContext.Input.jump = false;
             }
 
-            // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
             if (_verticalVelocity < _terminalVelocity)
             {
                 _verticalVelocity += Gravity * Time.deltaTime;
@@ -279,49 +252,32 @@ namespace StarterAssets
                 GroundedRadius);
         }
 
-        /*private void Roll()
+        public void Roll()
         {
-            if(!_rollVector.HasValue)
-            {
-                PlayerContext.IsRolling = true;
-                _rollVector = PlayerContext.MoveDirection;
-                _remainingRollTime = RollTime;
-                PlayerContext.Animator.SetBool(_animIdIsRolling, true);
-                ParentConstraint parentConstraint = PlayerContext.Guns[0].main.GetComponentInChildren<ParentConstraint>();
-                TwoBoneIKConstraint[] twoBoneIKConstraints = PlayerContext.Rig.GetComponentsInChildren<TwoBoneIKConstraint>();
-                parentConstraint.weight = 1;
-                twoBoneIKConstraints[0].weight = 0;
-                twoBoneIKConstraints[1].weight = 0;
-                parentConstraint.constraintActive = true;
-            }
-
-            ApplyDirectionRotation(_rollVector.Value, 10);
+            ApplyDirectionRotation(10, _rollVector.Value);
             _speed = GetSpeed(RollSpeed);
             if (_remainingRollTime < 0.1f)
             {
                 _speed = GetSpeed(MoveSpeed - 2);
             }
-            PlayerContext.Controller.Move(_rollVector.Value * (_speed * Time.deltaTime) +
-                 new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
             _remainingRollTime -= Time.deltaTime;
-
-
-
             if(_remainingRollTime < 0.0f)
             {
-                _rollVector = null;
-                PlayerContext.IsRolling = false;
-                PlayerContext.Input.roll = false;
-                PlayerContext.Animator.SetBool(_animIdIsRolling, false);
-                ParentConstraint parentConstraint = PlayerContext.Guns[0].main.GetComponentInChildren<ParentConstraint>();
-                TwoBoneIKConstraint[] twoBoneIKConstraints = PlayerContext.Rig.GetComponentsInChildren<TwoBoneIKConstraint>();
-                parentConstraint.weight = 0;
-                twoBoneIKConstraints[0].weight = 1;
-                twoBoneIKConstraints[1].weight = 1;
-                parentConstraint.constraintActive = false;
-                _speed = MoveSpeed;
+                MovementState newMovement = DetermineNextState();
+                PlayerContext.PlayerStateMachine.SwitchMovementState(newMovement);
             }
-        }*/
+        }
+
+        public void Jump()
+        {
+            StartCoroutine(JumpRoutine());
+        }
+
+        private IEnumerator JumpRoutine()
+        {
+            yield return new WaitForSeconds(0.1f);
+            _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+        }
 
         private float GetSpeed(float targetSpeed)
         {
@@ -329,7 +285,8 @@ namespace StarterAssets
             float currentHorizontalSpeed = new Vector3(PlayerContext.Controller.velocity.x, 0.0f, PlayerContext.Controller.velocity.z).magnitude;
 
             float speedOffset = 0.1f;
-            float inputMagnitude = PlayerContext.Input.move.magnitude;
+
+            float inputMagnitude = 1;
 
             float speed = 0f;
 
@@ -359,9 +316,18 @@ namespace StarterAssets
             transform.rotation = targetRotation;
         }
 
-        public void ApplyDirectionRotation(float speed)
+        public void ApplyDirectionRotation(float speed, Vector3? direction = null)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(new Vector3(moveDirection.x, 0.0f, moveDirection.z));
+            Vector3 currentDirection;
+            if(direction.HasValue)
+            {
+                currentDirection = direction.Value;
+            }
+            else
+            {
+                currentDirection = new Vector3(moveDirection.x, 0.0f, moveDirection.z);
+            }
+            Quaternion targetRotation = Quaternion.LookRotation(currentDirection);
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, speed * Time.deltaTime);
         }
 
@@ -418,6 +384,14 @@ namespace StarterAssets
             }
         }
 
+        private void HandleMovementActionTimeout()
+        {
+            if (_movementActionTimeoutDelta >= 0)
+            {
+                _movementActionTimeoutDelta -= Time.deltaTime;
+            }
+        }
+
         public void SetupCharacterDirection()
         {
             _speed = GetSpeed(targetSpeed);
@@ -435,6 +409,25 @@ namespace StarterAssets
                 moveDirection = Quaternion.Euler(0, 45, 0) * inputDirection;
                 animationDirection = transform.InverseTransformDirection(moveDirection);
             }
+        }
+
+        private MovementState DetermineNextState()
+        {
+            MovementState newMovement = MovementState.Run;
+            if (!PlayerContext.Grounded)
+            {
+                newMovement = MovementState.Fall;
+            }
+            else if (PlayerContext.Input.sprint)
+            {
+                newMovement = MovementState.Sprint;
+            }
+            else if (!isMouseIdle)
+            {
+                newMovement = MovementState.Aim;
+            }
+
+            return newMovement;
         }
     }
 }

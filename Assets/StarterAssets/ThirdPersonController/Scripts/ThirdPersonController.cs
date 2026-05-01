@@ -20,6 +20,21 @@ namespace StarterAssets
     public class ThirdPersonController : MonoBehaviour
     {
         [Header("Player")]
+        [Tooltip("Sprint consumption of stamina in 1 sec")]
+        public float SprintStaminaConsumption = 25.0f;
+
+        [Tooltip("Jump consumption of stamina")]
+        public float JumpStaminaConsumption = 25.0f;
+
+        [Tooltip("Roll consumption of stamina")]
+        public float RollStaminaConsumption = 30.0f;
+
+        [Tooltip("Stamina regen in 1 sec")]
+        public float StaminaRegen = 50.0f;
+
+        [Tooltip("Stamina regen timeout in seconds")]
+        public float StaminaRegenTimeout = 1.5f;
+
         [Tooltip("Move speed of the character in m/s")]
         public float MoveSpeed = 2.0f;
 
@@ -52,7 +67,7 @@ namespace StarterAssets
 
         [Space(10)]
         [Tooltip("Time required to pass before being able to do movement action again.")]
-        public float MovementActionTimeout = 0.5f;
+        public float MovementActionTimeout = 0.1f;
 
         [Tooltip("Useful for rough ground")]
         public float GroundedOffset = -0.14f;
@@ -101,9 +116,15 @@ namespace StarterAssets
         public Vector3 moveDirection = Vector3.zero;
         public Vector3 animationDirection = Vector3.zero;
 
+        // stamina values
+        public float _staminaDrainTimeout;
+        public float _staminaRegenTimeout;
+        public bool _needsStaminaRegen = false;
+
         private void Update()
         {
             HandleMovementActionTimeout();
+            HandleStaminaRegenTimeout();
             HandleAimState();
             HandleInput();
             ResolveStates();
@@ -121,28 +142,28 @@ namespace StarterAssets
             // Mouse position
             mousePosition = PlayerContext.Input.look;
 
-            // Switch to Roll state if timeout expired and its not already roll, jump, fall
+            // Switch to Roll state if timeout expired and Player has stamina and its not already roll, jump, fall
             if(PlayerContext.Input.roll && PlayerContext.MovementState != MovementState.Roll && PlayerContext.MovementState != MovementState.Jump && PlayerContext.MovementState != MovementState.Fall)
             {
-                if(_movementActionTimeoutDelta < 0)
+                if(_movementActionTimeoutDelta < 0 && PlayerContext.Stamina >= RollStaminaConsumption)
                 {
                     PlayerContext.PlayerStateMachine.SwitchMovementState(MovementState.Roll);
                 }
                 PlayerContext.Input.roll = false;
             }
 
-            // Switch to Jump state if timeout expired and its not already jump, roll, fall
+            // Switch to Jump state if timeout expired and Player has stamina and its not already jump, roll, fall
             if (PlayerContext.Input.jump && PlayerContext.MovementState != MovementState.Roll && PlayerContext.MovementState != MovementState.Jump && PlayerContext.MovementState != MovementState.Fall)
             {
-                if(_movementActionTimeoutDelta < 0)
+                if(_movementActionTimeoutDelta < 0 && PlayerContext.Stamina >= JumpStaminaConsumption)
                 {
                     PlayerContext.PlayerStateMachine.SwitchMovementState(MovementState.Jump);
                 }
                 PlayerContext.Input.jump = false;
             }
 
-            // Start Sprint state if its not already sprint, jump, roll, fall, and the player is moving
-            if (PlayerContext.Input.sprint && PlayerContext.MovementState != MovementState.Sprint && PlayerContext.MovementState != MovementState.Roll && PlayerContext.MovementState != MovementState.Jump && PlayerContext.MovementState != MovementState.Fall && PlayerContext.IsMoving)
+            // Start Sprint state if Player has stamina and its not already sprint, jump, roll, fall, and the player is moving
+            if (PlayerContext.Input.sprint && PlayerContext.MovementState != MovementState.Sprint && PlayerContext.MovementState != MovementState.Roll && PlayerContext.MovementState != MovementState.Jump && PlayerContext.MovementState != MovementState.Fall && PlayerContext.IsMoving && PlayerContext.Stamina > 0)
             {
                 PlayerContext.PlayerStateMachine.SwitchMovementState(MovementState.Sprint);
             }
@@ -161,16 +182,19 @@ namespace StarterAssets
 
         private void ResolveStates()
         {
-            // Switch state from sprint if the player stops moving
-            if(PlayerContext.MovementState == MovementState.Sprint && !PlayerContext.IsMoving)
+            // Switch state from sprint if the player stops moving or no stamina
+            if(PlayerContext.MovementState == MovementState.Sprint)
             {
-                if (isMouseIdle)
+                if (!PlayerContext.IsMoving || PlayerContext.Stamina == 0)
                 {
-                    PlayerContext.PlayerStateMachine.SwitchMovementState(MovementState.Run);
-                }
-                else
-                {
-                    PlayerContext.PlayerStateMachine.SwitchMovementState(MovementState.Aim);
+                    if (isMouseIdle)
+                    {
+                        PlayerContext.PlayerStateMachine.SwitchMovementState(MovementState.Run);
+                    }
+                    else
+                    {
+                        PlayerContext.PlayerStateMachine.SwitchMovementState(MovementState.Aim);
+                    }
                 }
             }
 
@@ -392,6 +416,22 @@ namespace StarterAssets
             }
         }
 
+        private void HandleStaminaRegenTimeout()
+        {
+            if(_needsStaminaRegen)
+            {
+                if (_staminaRegenTimeout >= 0)
+                {
+                    _staminaRegenTimeout -= Time.deltaTime;
+                }
+                else
+                {
+                    PlayerContext.Stamina += StaminaRegen * Time.deltaTime;
+                    PlayerContext.Stamina = Mathf.Clamp(PlayerContext.Stamina, 0, 100);
+                }
+            }
+        }
+
         public void SetupCharacterDirection()
         {
             _speed = GetSpeed(targetSpeed);
@@ -409,6 +449,33 @@ namespace StarterAssets
                 moveDirection = Quaternion.Euler(0, 45, 0) * inputDirection;
                 animationDirection = transform.InverseTransformDirection(moveDirection);
             }
+        }
+
+        public void JumpAimRotation()
+        {
+            if(!isMouseIdle)
+            {
+                ApplyAimRotation();
+            }
+        }
+        public void DrainStamina(float amount)
+        {
+            if (PlayerContext.MovementState == MovementState.Sprint)
+            {
+                if(_staminaDrainTimeout < 0f)
+                {
+                    PlayerContext.Stamina -= amount * Time.deltaTime;
+                }
+                else
+                {
+                    _staminaDrainTimeout -= Time.deltaTime;
+                }
+            }
+            else
+            {
+                PlayerContext.Stamina -= amount;
+            }
+            PlayerContext.Stamina = Mathf.Clamp(PlayerContext.Stamina, 0, 100);
         }
 
         private MovementState DetermineNextState()

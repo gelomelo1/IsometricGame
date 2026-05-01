@@ -22,6 +22,7 @@ public class PlayerContext : MonoBehaviour
     public bool IsShooting = false;
     public bool IsReloading = false;
     public bool Grounded = true;
+    public float Stamina = 100;
     public MovementState MovementState = MovementState.Aim;
     [Header("PlayerGunData")]
     public Guns[] Guns;

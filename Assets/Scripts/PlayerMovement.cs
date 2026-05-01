@@ -80,6 +80,17 @@ public class SprintState : State
     public override void Enter()
     {
         PlayerContext.Animator.SetInteger("MovementState", 2);
+        
+        if(PlayerContext.Stamina >= 90)
+        {
+            PlayerController._staminaDrainTimeout = PlayerController.StaminaRegenTimeout;
+        }
+        else
+        {
+            PlayerController._staminaDrainTimeout = 0;
+        }
+
+        PlayerController._needsStaminaRegen = false;
     }
 
     public override void Update()
@@ -88,6 +99,7 @@ public class SprintState : State
         PlayerController.HandleTargetSpeed(PlayerController.SprintSpeed);
         PlayerController.SetupCharacterDirection();
         PlayerController.ApplyDirectionRotation(PlayerController.directionRotationSpeed);
+        PlayerController.DrainStamina(PlayerController.SprintStaminaConsumption);
 
         float inputMagnitude = 0;
 
@@ -97,6 +109,12 @@ public class SprintState : State
         }
 
         PlayerContext.Animator.SetFloat("Speed", inputMagnitude, 0.1f, Time.deltaTime);
+    }
+
+    public override void Exit()
+    {
+        PlayerController._staminaRegenTimeout = PlayerController.StaminaRegenTimeout;
+        PlayerController._needsStaminaRegen = true;
     }
 }
 
@@ -113,6 +131,8 @@ public class RollState : State
         PlayerController._rollVector = PlayerController.moveDirection;
         PlayerController._remainingRollTime = PlayerController.RollTime;
         PlayerContext.Animator.SetInteger("MovementState", 3);
+        PlayerController.DrainStamina(PlayerController.RollStaminaConsumption);
+        PlayerController._needsStaminaRegen = false;
         ParentConstraint parentConstraint = PlayerContext.Guns[0].main.GetComponentInChildren<ParentConstraint>();
         TwoBoneIKConstraint[] twoBoneIKConstraints = PlayerContext.Rig.GetComponentsInChildren<TwoBoneIKConstraint>();
         parentConstraint.weight = 1;
@@ -128,6 +148,8 @@ public class RollState : State
 
     public override void Exit()
     {
+        PlayerController._staminaRegenTimeout = PlayerController.StaminaRegenTimeout;
+        PlayerController._needsStaminaRegen = true;
         ParentConstraint parentConstraint = PlayerContext.Guns[0].main.GetComponentInChildren<ParentConstraint>();
         TwoBoneIKConstraint[] twoBoneIKConstraints = PlayerContext.Rig.GetComponentsInChildren<TwoBoneIKConstraint>();
         parentConstraint.weight = 0;
@@ -150,11 +172,20 @@ public class JumpState : State
     public override void Enter()
     {
         PlayerContext.Animator.SetInteger("MovementState", 4);
+        PlayerController.DrainStamina(PlayerController.JumpStaminaConsumption);
+        PlayerController._needsStaminaRegen = false;
         PlayerController.Jump();
+    }
+
+    public override void Update()
+    {
+        PlayerController.JumpAimRotation();
     }
 
     public override void Exit()
     {
+        PlayerController._staminaRegenTimeout = PlayerController.StaminaRegenTimeout;
+        PlayerController._needsStaminaRegen = true;
         PlayerController._movementActionTimeoutDelta = PlayerController.MovementActionTimeout;
     }
 }
@@ -170,6 +201,11 @@ public class FallState : State
     public override void Enter()
     {
         PlayerContext.Animator.SetInteger("MovementState", 5);
+    }
+
+    public override void Update()
+    {
+        PlayerController.JumpAimRotation();
     }
 
     public override void Exit()
